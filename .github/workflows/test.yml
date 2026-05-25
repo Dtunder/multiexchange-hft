@@ -1,0 +1,31 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      PAPER_MODE: "true"
+      MOCK_LLM: "true"
+      USE_MOCK_MODEL: "true"
+      MOCK_DATA: "true"
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Pytest
+      run: |
+        PYTHONPATH=. pytest --tb=short
